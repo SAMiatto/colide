@@ -83,7 +83,7 @@ $$
 \min_{\mathbf{W}, \sigma \geq \sigma_0} \quad \mu_k \left[ \frac{1}{2 n \sigma} \| \mathbf{X} - \mathbf{W}^{\top}\mathbf{X} \|_{F}^2 + \frac{d \sigma}{2} + \lambda \| \mathbf{W} \|_1 \right] + \mathcal{H}\_{\text{ldet}}(\mathbf{W}, s_k),
 $$
 
-where the schedule of hyperparameters $\mu_k\geq 0$ and $s_k>0$ must be prescribed prior to implementation. 
+where the schedule of hyperparameters $\mu_k\geq 0$ and $s_k>0$ must be prescribed prior to implementation. The additional constraint $\sigma \geq \sigma_0$ safeguards against potential ill-posed scenarios where the estimate $\hat{\sigma}$ approaches zero.
 
 CoLiDE-EV jointly estimates the noise level $\sigma$ and the adjacency matrix $\mathbf{W}$ for each $\mu_k$. To this end, we rely on (inexact) block coordinate descent (BCD) iterations. This cyclic strategy involves fixing $\sigma$ to its most up-to-date value and minimizing the objective function inexactly w.r.t. $\mathbf{W}$, subsequently updating $\sigma$ in closed form given the latest $\mathbf{W}$ via
 
@@ -92,6 +92,22 @@ $$
 $$
 
 where $\text{cov}(\mathbf{X}) := \frac{1}{n} \mathbf{X} \mathbf{X}^{\top}$ is the precomputed sample covariance matrix. The mutually-reinforcing interplay between noise level and DAG estimation should be apparent. There are several ways to inexactly solve the $\mathbf{W}$ subproblem using first-order methods. Here, we run a single step of the ADAM optimizer to refine $\mathbf{W}$. We observed that running multiple ADAM iterations yields marginal gains, since we are anyways continuously re-updating $\mathbf{W}$ in the BCD loop. This process is repeated until either convergence is attained, or, a prescribed maximum iteration count is reached.
+
+### CoLiDE-NV
+
+We also address the more challenging endeavor of learning DAGs in heteroscedastic scenarios, where noise variables have non-equal variances (NV) $\sigma_1^2,\ldots,\sigma_d^2$. Bringing to bear ideas from the [generalized concomitant multi-task lasso](https://arxiv.org/abs/1705.09778) and mimicking the optimization approach for the EV case discussed earlier, we propose the CoLiDE-NV estimator
+
+$$
+\min_{\mathbf{W}, \boldsymbol{\Sigma} \geq \boldsymbol{\Sigma}_0} \quad \mu_k \left[ \frac{1}{2n} \text{Tr} \left( (\mathbf{X} - \mathbf{W}^{\top}\mathbf{X})^{\top} \boldsymbol{\Sigma}^{-1} (\mathbf{X} - \mathbf{W}^{\top}\mathbf{X}) \right) + \frac{1}{2} \text{Tr}(\boldsymbol{\Sigma}) + \lambda \| \mathbf{W} \|_1 \right] + \mathcal{H}\_{\text{ldet}}(\mathbf{W}, s_k).
+$$
+
+Note that $\boldsymbol{\Sigma}=\text{diag}(\sigma_1,\ldots,\sigma_d)$ is a diagonal matrix of exogenous noise *standard deviations* (hence not a covariance matrix). A closed form solution for $\boldsymbol{\Sigma}$ given $\mathbf{W}$ is also readily obtained,
+
+$$
+\hat{\boldsymbol{\Sigma}} = \max\left(\sqrt{\text{diag}\left( (\mathbf{I} - \mathbf{W})^{\top} \text{cov}(\mathbf{X}) (\mathbf{I} - \mathbf{W}) \right)},\boldsymbol{\Sigma}_0\right),
+$$
+
+where $\sqrt{(\cdot)}$ is meant to be taken element-wise. 
 
 ## Acknowledgments
 

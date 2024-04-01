@@ -23,3 +23,31 @@ If you find this code beneficial, kindly consider citing:
   year={2024}
 }
 ```
+
+## Getting started
+
+### Install the packages
+
+We recommend using a virtual environment via `virtualenv` or `conda`, and use `pip` to install the requirements.
+
+```bash
+$ pip install -r requirements.txt
+```
+
+### Requirements
+
+- Python 3.7+
+- `numpy`
+- `scipy`
+- `tqdm`
+- `networkx`
+
+### Running a simple demo
+
+The simplest way to try out CoLiDE is by executing a straightforward example. 
+
+```bash
+$ python main.py --nodes 10 --edges 20 --samples 1000 --graph er --vartype ev --seed 0
+```
+
+This example initially generates a random Erd\H{o}s-R'enyi DAG with 10 nodes and 20 edges. Subsequently, utilizing a linear SEM, 1000 i.i.d samples are generated, assuming equal noise variance and a Gaussian noise distribution. Next, both CoLiDE-EV and CoLiDE-NV are applied to this data, and the graph recovery performance will be displayed.

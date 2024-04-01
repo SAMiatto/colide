@@ -52,6 +52,7 @@ $ python main.py --nodes 10 --edges 20 --samples 1000 --graph er --vartype ev --
 
 This example initially generates a random Erdos-Renyi DAG with 10 nodes and 20 edges. Subsequently, utilizing a linear SEM, 1000 i.i.d samples are generated, assuming equal noise variance and a Gaussian noise distribution. Next, both CoLiDE-EV and CoLiDE-NV are applied to this data, and the graph recovery performance will be displayed.
 
+
 ## Acknowledgments
 
 We express our gratitude to the authors of the [DAGMA repository][dagma-repository] for providing their code. A portion of our code is derived from their implementation, particularly incorporating their acyclicity function and optimization scheme.

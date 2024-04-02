@@ -16,7 +16,7 @@ If you find this code beneficial, kindly consider citing:
 ### BibTeX
 
 ```bibtex
-@inproceedings{saboksayr2023colide,
+@inproceedings{saboksayr2024colide,
   title={{CoLiDE: Concomitant Linear DAG Estimation}},
   author={Saboksayr, Seyed Saman and Mateos, Gonzalo and Tepper, Mariano},
   booktitle={International Conference on Learning Representations},
